@@ -1,7 +1,8 @@
-function openModal(modalSelector, modalTimerId){
+function openModal(modalSelector, modalTimerId, marginRight){
     const modal =  document.querySelector(modalSelector);
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+    document.body.style.marginRight = `${marginRight}px`;
     if (modalTimerId){
         clearInterval(modalTimerId);
     }
@@ -11,6 +12,7 @@ function closeModal(modalSelector){
     const modal =  document.querySelector(modalSelector);
     modal.style.display = 'none';
     document.body.style.overflow = '';
+    document.body.style.marginRight = `0px`;
 }
 
 function modal(triggerSelector, modalSelector, closeSelector, modalTimerId, clickOverflow = true) {
@@ -18,7 +20,8 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId, clic
     const trigger = document.querySelectorAll(triggerSelector),
           modal =  document.querySelector(modalSelector),
           close = modal.querySelector(closeSelector),
-          windows = document.querySelectorAll('[data-modal]');
+          windows = document.querySelectorAll('[data-modal]'),
+          scroll = calcScroll();
     
     trigger.forEach(item => {
         item.addEventListener('click', (e) => {
@@ -30,7 +33,7 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId, clic
                 item.style.display = 'none';        
             });
 
-            openModal(modalSelector, modalTimerId);
+            openModal(modalSelector, modalTimerId, scroll);
         });
     });
 
@@ -61,6 +64,21 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId, clic
             closeModal(modalSelector);
         }
     });
+
+    function calcScroll(){
+        let div = document.createElement('div');
+
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.overflowY = 'scroll';
+        div.style.visibility = 'hidden';
+
+        document.body.appendChild(div);
+        let scrollWidth = div.offsetWidth - div.clientWidth;
+        div.remove();
+
+        return scrollWidth;
+    }
 
 }
 

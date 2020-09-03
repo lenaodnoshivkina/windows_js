@@ -19427,10 +19427,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
 
 
-function openModal(modalSelector, modalTimerId) {
+function openModal(modalSelector, modalTimerId, marginRight) {
   var modal = document.querySelector(modalSelector);
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  document.body.style.marginRight = "".concat(marginRight, "px");
 
   if (modalTimerId) {
     clearInterval(modalTimerId);
@@ -19441,6 +19442,7 @@ function closeModal(modalSelector) {
   var modal = document.querySelector(modalSelector);
   modal.style.display = 'none';
   document.body.style.overflow = '';
+  document.body.style.marginRight = "0px";
 }
 
 function modal(triggerSelector, modalSelector, closeSelector, modalTimerId) {
@@ -19448,7 +19450,8 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId) {
   var trigger = document.querySelectorAll(triggerSelector),
       modal = document.querySelector(modalSelector),
       close = modal.querySelector(closeSelector),
-      windows = document.querySelectorAll('[data-modal]');
+      windows = document.querySelectorAll('[data-modal]'),
+      scroll = calcScroll();
   trigger.forEach(function (item) {
     item.addEventListener('click', function (e) {
       if (e.target) {
@@ -19458,7 +19461,7 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId) {
       windows.forEach(function (item) {
         item.style.display = 'none';
       });
-      openModal(modalSelector, modalTimerId);
+      openModal(modalSelector, modalTimerId, scroll);
     });
   });
   close.addEventListener('click', function () {
@@ -19483,6 +19486,18 @@ function modal(triggerSelector, modalSelector, closeSelector, modalTimerId) {
       closeModal(modalSelector);
     }
   });
+
+  function calcScroll() {
+    var div = document.createElement('div');
+    div.style.width = '50px';
+    div.style.height = '50px';
+    div.style.overflowY = 'scroll';
+    div.style.visibility = 'hidden';
+    document.body.appendChild(div);
+    var scrollWidth = div.offsetWidth - div.clientWidth;
+    div.remove();
+    return scrollWidth;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (modal);
